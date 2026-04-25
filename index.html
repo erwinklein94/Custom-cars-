@@ -3,104 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Customizador Automotivo 3D</title>
+    <title>Customizador Automotivo 3D - Jeep Renegade</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { margin: 0; overflow: hidden; font-family: 'Inter', sans-serif; }
-        canvas { display: block; }
     </style>
 </head>
-<body class="bg-gray-900 text-white">
+<body class="bg-gray-900 text-white relative h-screen w-screen">
 
-    <div id="canvas-container" class="w-full h-screen">
-        </div>
+    <div class="absolute top-0 left-0 w-full h-full z-0">
+        <iframe 
+            class="w-full h-full"
+            title="Jeep Renegade 2016" 
+            frameborder="0" 
+            allowfullscreen 
+            mozallowfullscreen="true" 
+            webkitallowfullscreen="true" 
+            allow="autoplay; fullscreen; xr-spatial-tracking" 
+            xr-spatial-tracking 
+            execution-while-out-of-viewport 
+            execution-while-not-rendered 
+            web-share 
+            src="https://sketchfab.com/models/192f7e81dce84c6780434f692a0f96c5/embed?autostart=1&ui_theme=dark"> 
+        </iframe>
+    </div>
 
-    <div class="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black/80 to-transparent">
-        <div class="max-w-4xl mx-auto bg-white/10 backdrop-blur-md rounded-3xl p-6 border border-white/20">
+    <div class="absolute bottom-0 left-0 w-full p-6 z-10 pointer-events-none">
+        <div class="max-w-4xl mx-auto bg-black/40 backdrop-blur-md rounded-3xl p-6 border border-white/20 shadow-2xl pointer-events-auto">
             
-            <h2 class="text-xl font-semibold mb-4">Personalize seu Jeep Renegade</h2>
+            <h2 class="text-xl font-semibold mb-4 text-white">Personalize seu Jeep Renegade</h2>
             
             <div class="flex gap-4 overflow-x-auto pb-2">
-                <button class="px-4 py-2 bg-white text-black rounded-full font-medium transition-all hover:bg-gray-200">Cor da Pintura</button>
-                <button class="px-4 py-2 bg-gray-800 rounded-full font-medium border border-white/10 hover:bg-gray-700">Rodas</button>
-                <button class="px-4 py-2 bg-gray-800 rounded-full font-medium border border-white/10 hover:bg-gray-700">Acessórios</button>
-                <button class="px-4 py-2 bg-gray-800 rounded-full font-medium border border-white/10 hover:bg-gray-700">Suspensão</button>
+                <button class="px-4 py-2 bg-white text-black rounded-full font-medium transition-all hover:bg-gray-200 shadow-sm">Cor da Pintura</button>
+                <button class="px-4 py-2 bg-gray-800/80 rounded-full font-medium border border-white/10 hover:bg-gray-700 transition-all">Rodas</button>
+                <button class="px-4 py-2 bg-gray-800/80 rounded-full font-medium border border-white/10 hover:bg-gray-700 transition-all">Rack e Acessórios</button>
+                <button class="px-4 py-2 bg-gray-800/80 rounded-full font-medium border border-white/10 hover:bg-gray-700 transition-all">Suspensão</button>
             </div>
 
-            <div class="mt-6 flex items-center gap-3">
-                <div class="w-8 h-8 rounded-full bg-gray-600 cursor-pointer border-2 border-white shadow-lg" title="Cinza Chumbo"></div>
-                <div class="w-8 h-8 rounded-full bg-red-600 cursor-pointer border-2 border-transparent hover:border-white transition-all" title="Vermelho Alpine"></div>
-                <div class="w-8 h-8 rounded-full bg-black cursor-pointer border-2 border-transparent hover:border-white transition-all" title="Preto Carbono"></div>
-                <div class="w-8 h-8 rounded-full bg-white cursor-pointer border-2 border-transparent hover:border-white transition-all" title="Branco Polar"></div>
+            <div class="mt-6 flex items-center gap-4">
+                <button class="w-10 h-10 rounded-full bg-[#4A4A4A] cursor-pointer border-2 border-white shadow-lg ring-2 ring-white/30" title="Cinza Chumbo"></button>
+                <button class="w-10 h-10 rounded-full bg-red-700 cursor-pointer border-2 border-transparent hover:border-white transition-all" title="Vermelho Colorado"></button>
+                <button class="w-10 h-10 rounded-full bg-black cursor-pointer border-2 border-transparent hover:border-white transition-all" title="Preto Carbono"></button>
+                <button class="w-10 h-10 rounded-full bg-white cursor-pointer border-2 border-transparent hover:border-white transition-all" title="Branco Polar"></button>
             </div>
         </div>
     </div>
 
-    <script type="importmap">
-        {
-            "imports": {
-                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
-                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
-            }
-        }
-    </script>
-
-    <script type="module">
-        import * as THREE from 'three';
-        import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-
-        // Configuração da Cena
-        const scene = new THREE.Scene();
-        scene.background = new THREE.Color(0x111827); // Mesmo tom do Tailwind gray-900
-
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.set(4, 2, 5);
-
-        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(window.devicePixelRatio);
-        document.getElementById('canvas-container').appendChild(renderer.domElement);
-
-        // Iluminação
-        const light = new THREE.AmbientLight(0xffffff, 1); 
-        scene.add(light);
-        const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
-        directionalLight.position.set(5, 10, 7.5);
-        scene.add(directionalLight);
-
-        // Controles de Câmera (Orbit)
-        const controls = new OrbitControls(camera, renderer.domElement);
-        controls.enableDamping = true;
-
-        // CARREGANDO O MODELO 3D
-        const loader = new GLTFLoader();
-        loader.load('caminho/para/seu/modelo/carro.glb', function (gltf) {
-            const car = gltf.scene;
-            scene.add(car);
-            
-            // Centralizar o carro
-            const box = new THREE.Box3().setFromObject(car);
-            const center = box.getCenter(new THREE.Vector3());
-            car.position.sub(center);
-        }, undefined, function (error) {
-            console.error('Erro ao carregar o modelo:', error);
-        });
-
-        // Loop de Animação
-        function animate() {
-            requestAnimationFrame(animate);
-            controls.update();
-            renderer.render(scene, camera);
-        }
-        animate();
-
-        // Ajuste de Janela
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
-    </script>
 </body>
 </html>
