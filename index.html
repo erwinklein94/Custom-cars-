@@ -1,7 +1,917 @@
 <!DOCTYPE html>
 
 <html lang="pt-br">
+<head><!DOCTYPE html>
+
+<html lang="pt-BR">
 <head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>OrçaPro — Orçamentos profissionais para autônomos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+  :root{
+    --green-900:#0e3b2e;
+    --green-700:#15543f;
+    --green-500:#1f7a5a;
+    --green-400:#2a9970;
+    --orange:#f08a3e;
+    --orange-soft:#f6a763;
+    --cream:#fbf3e2;
+    --cream-2:#f4ead2;
+    --paper:#f7f3ec;
+    --ink:#1a1d1b;
+    --ink-soft:#5a5f5b;
+    --line:#e7dfcc;
+    --shadow: 0 30px 60px -25px rgba(14,59,46,.25), 0 12px 24px -16px rgba(14,59,46,.18);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--paper);color:var(--ink);font-family:'Inter',sans-serif;font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+  body{
+    background:
+      radial-gradient(1200px 600px at 90% -10%, rgba(240,138,62,.18), transparent 60%),
+      radial-gradient(900px 500px at -10% 30%, rgba(31,122,90,.10), transparent 60%),
+      var(--paper);
+    min-height:100vh;
+  }
+  h1,h2,h3,h4{font-family:'Fraunces',serif;font-weight:600;letter-spacing:-.02em;color:var(--ink)}
+  a{color:inherit;text-decoration:none}
+  button{font-family:inherit;cursor:pointer;border:none;background:none}
+
+/* NAV */
+.nav{
+max-width:1280px;margin:24px auto 0;padding:14px 22px;
+background:rgba(255,253,247,.85);backdrop-filter:blur(12px);
+border:1px solid var(–line);border-radius:999px;
+display:flex;align-items:center;gap:24px;
+box-shadow:var(–shadow);
+}
+.logo{display:flex;align-items:center;gap:10px;font-family:‘Fraunces’,serif;font-weight:700;font-size:20px}
+.logo-mark{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(–green-700),var(–green-400));display:grid;place-items:center;color:white;font-size:14px;font-family:‘Fraunces’,serif}
+.nav-links{display:flex;gap:6px;margin-left:auto}
+.nav-links button{padding:9px 16px;border-radius:999px;color:var(–ink-soft);font-size:14px;font-weight:500;transition:all .2s}
+.nav-links button:hover{color:var(–ink);background:rgba(0,0,0,.04)}
+.nav-links button.active{color:var(–green-900);background:var(–cream)}
+.btn-cta{background:var(–green-700);color:#fff;padding:10px 20px;border-radius:999px;font-weight:600;font-size:14px;transition:all .2s}
+.btn-cta:hover{background:var(–green-900);transform:translateY(-1px)}
+
+/* PAGES */
+main{max-width:1280px;margin:0 auto;padding:40px 22px 80px}
+.page{display:none;animation:fade .4s ease}
+.page.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* HOME */
+.hero{display:grid;grid-template-columns:1.1fr 1fr;gap:32px;margin-bottom:40px}
+.hero-card{background:#fff;border-radius:28px;padding:48px;box-shadow:var(–shadow);position:relative;overflow:hidden;border:1px solid var(–line)}
+.hero-card h1{font-size:54px;line-height:1.02;margin-bottom:18px}
+.hero-card h1 em{font-style:italic;color:var(–green-700);font-weight:500}
+.hero-card p{color:var(–ink-soft);font-size:17px;max-width:440px;margin-bottom:28px}
+.hero-actions{display:flex;gap:10px;flex-wrap:wrap}
+.btn-pill{padding:13px 24px;border-radius:999px;font-weight:600;font-size:14px;transition:all .2s;border:1px solid transparent}
+.btn-primary{background:var(–green-700);color:#fff}
+.btn-primary:hover{background:var(–green-900)}
+.btn-cream{background:var(–cream);color:var(–ink);border-color:var(–line)}
+.btn-cream:hover{background:var(–cream-2)}
+
+.hero-side{display:grid;grid-template-rows:1fr 1fr;gap:24px}
+.card-orange{
+background:linear-gradient(160deg,#ffd09a,var(–orange) 70%,#d96a1f);
+border-radius:24px;padding:32px;color:#fff;box-shadow:var(–shadow);
+position:relative;overflow:hidden;
+}
+.card-orange::after{content:””;position:absolute;inset:auto -30% -50% auto;width:80%;height:140%;background:radial-gradient(circle,rgba(255,255,255,.35),transparent 60%);pointer-events:none}
+.card-orange h3{color:#fff;font-size:28px;margin-bottom:8px}
+.card-orange p{font-size:14px;opacity:.95;max-width:280px}
+.card-green{
+background:linear-gradient(155deg,var(–green-500),var(–green-900));
+border-radius:24px;padding:32px;color:#fff;box-shadow:var(–shadow);
+position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;
+}
+.card-green::before{content:””;position:absolute;inset:-40% -10% auto auto;width:70%;height:140%;background:radial-gradient(ellipse,rgba(42,153,112,.7),transparent 60%);filter:blur(20px)}
+.card-green h3{color:#fff;font-size:24px;position:relative}
+.pill-tag{position:relative;align-self:flex-end;background:rgba(255,255,255,.95);color:var(–green-900);padding:8px 16px;border-radius:999px;font-size:13px;font-weight:600}
+
+/* SEARCH SECTION */
+.search-bar{
+background:#fff;border:1px solid var(–line);border-radius:24px;padding:10px;
+display:grid;grid-template-columns:1.5fr 1fr 1fr auto;gap:8px;align-items:center;
+box-shadow:var(–shadow);margin-bottom:32px;
+}
+.search-field{padding:14px 18px;border-radius:16px;background:var(–cream);transition:background .2s}
+.search-field:hover{background:var(–cream-2)}
+.search-field label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(–ink-soft);font-weight:600;margin-bottom:4px}
+.search-field input,.search-field select{width:100%;border:none;background:transparent;font-size:15px;font-weight:500;color:var(–ink);outline:none;font-family:inherit}
+.search-btn{background:var(–green-700);color:#fff;padding:18px 28px;border-radius:16px;font-weight:600;display:flex;align-items:center;gap:8px;transition:all .2s}
+.search-btn:hover{background:var(–green-900)}
+
+/* SECTION TITLE */
+.section-head{display:flex;justify-content:space-between;align-items:end;margin-bottom:20px}
+.section-head h2{font-size:32px}
+.section-head p{color:var(–ink-soft);font-size:14px}
+
+/* PROFESSIONALS GRID */
+.pros-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.pro-card{
+background:#fff;border:1px solid var(–line);border-radius:22px;padding:22px;
+transition:all .25s;cursor:pointer;position:relative;overflow:hidden;
+}
+.pro-card:hover{transform:translateY(-3px);box-shadow:var(–shadow);border-color:var(–green-400)}
+.pro-head{display:flex;gap:14px;align-items:center;margin-bottom:14px}
+.avatar{width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,var(–orange-soft),var(–orange));display:grid;place-items:center;color:#fff;font-family:‘Fraunces’,serif;font-size:22px;font-weight:600;flex-shrink:0}
+.avatar.green{background:linear-gradient(135deg,var(–green-400),var(–green-700))}
+.avatar.cream{background:linear-gradient(135deg,#e8d8a8,#c9a86a);color:var(–green-900)}
+.pro-name{font-family:‘Fraunces’,serif;font-size:18px;font-weight:600;line-height:1.2}
+.pro-trade{font-size:13px;color:var(–ink-soft)}
+.pro-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.tag{font-size:11px;padding:4px 10px;border-radius:999px;background:var(–cream);color:var(–green-900);font-weight:500}
+.pro-meta{display:flex;justify-content:space-between;align-items:center;padding-top:14px;border-top:1px solid var(–line)}
+.rating{font-size:13px;color:var(–ink);font-weight:600}
+.rating span{color:var(–orange)}
+.pro-price{font-size:13px;color:var(–ink-soft)}
+.pro-price b{color:var(–green-700);font-weight:700}
+
+/* PROFILE PAGE */
+.profile-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:24px}
+.profile-main{background:#fff;border:1px solid var(–line);border-radius:24px;padding:36px;box-shadow:var(–shadow)}
+.profile-hero{display:flex;gap:20px;align-items:center;margin-bottom:24px;padding-bottom:24px;border-bottom:1px solid var(–line)}
+.avatar-lg{width:88px;height:88px;border-radius:50%;font-size:36px}
+.profile-hero h1{font-size:32px;margin-bottom:4px}
+.profile-hero .pro-trade{font-size:15px;margin-bottom:8px}
+.profile-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px}
+.stat{background:var(–cream);padding:16px;border-radius:16px;text-align:center}
+.stat b{display:block;font-family:‘Fraunces’,serif;font-size:24px;color:var(–green-900)}
+.stat span{font-size:12px;color:var(–ink-soft);text-transform:uppercase;letter-spacing:.06em}
+.profile-section{margin-bottom:22px}
+.profile-section h3{font-size:18px;margin-bottom:10px}
+.services-list{display:flex;flex-direction:column;gap:8px}
+.service-item{display:flex;justify-content:space-between;padding:12px 16px;background:var(–cream);border-radius:12px;font-size:14px}
+.service-item b{color:var(–green-700)}
+
+.request-card{background:linear-gradient(160deg,var(–green-500),var(–green-900));color:#fff;border-radius:24px;padding:32px;box-shadow:var(–shadow);position:sticky;top:20px;height:fit-content}
+.request-card h3{color:#fff;font-size:22px;margin-bottom:6px}
+.request-card > p{font-size:13px;opacity:.85;margin-bottom:20px}
+.form-field{margin-bottom:14px}
+.form-field label{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.08em;font-weight:600;margin-bottom:6px;opacity:.9}
+.form-field input,.form-field textarea,.form-field select{width:100%;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;padding:11px 14px;border-radius:12px;font-family:inherit;font-size:14px;outline:none;transition:all .2s}
+.form-field input::placeholder,.form-field textarea::placeholder{color:rgba(255,255,255,.5)}
+.form-field input:focus,.form-field textarea:focus,.form-field select:focus{background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.4)}
+.form-field textarea{resize:vertical;min-height:100px}
+.btn-orange{background:var(–orange);color:#fff;width:100%;padding:14px;border-radius:14px;font-weight:600;font-size:15px;transition:all .2s;margin-top:6px}
+.btn-orange:hover{background:#d96a1f}
+
+/* CALCULATOR (PRO AREA) */
+.calc-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:24px;align-items:start}
+.calc-main{background:#fff;border:1px solid var(–line);border-radius:24px;padding:32px;box-shadow:var(–shadow)}
+.calc-main h2{font-size:28px;margin-bottom:6px}
+.calc-main > p{color:var(–ink-soft);margin-bottom:24px;font-size:14px}
+.calc-section{margin-bottom:26px}
+.calc-section-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.calc-section-head h4{font-family:‘Fraunces’,serif;font-size:17px;font-weight:600}
+.btn-add{background:var(–cream);color:var(–green-900);padding:7px 14px;border-radius:999px;font-size:13px;font-weight:600;transition:all .2s}
+.btn-add:hover{background:var(–cream-2)}
+.row{display:grid;gap:8px;margin-bottom:8px;align-items:center}
+.row-mat{grid-template-columns:1.6fr .7fr .8fr 1fr 32px}
+.row-lab{grid-template-columns:1.8fr .8fr 1fr 32px}
+.row input{padding:11px 13px;border:1px solid var(–line);border-radius:11px;font-family:inherit;font-size:14px;outline:none;background:#fff;transition:all .2s;width:100%}
+.row input:focus{border-color:var(–green-400);box-shadow:0 0 0 3px rgba(31,122,90,.1)}
+.row .total-cell{padding:11px 13px;background:var(–cream);border-radius:11px;font-weight:600;color:var(–green-900);font-size:14px;text-align:right}
+.btn-remove{background:transparent;color:var(–ink-soft);font-size:18px;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;transition:all .2s}
+.btn-remove:hover{background:#fee;color:#c33}
+
+.extras-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.extras-row .form-light label{display:block;font-size:12px;color:var(–ink-soft);text-transform:uppercase;letter-spacing:.06em;font-weight:600;margin-bottom:6px}
+.extras-row .form-light input{width:100%;padding:11px 13px;border:1px solid var(–line);border-radius:11px;font-size:14px;outline:none}
+
+.calc-form-field{margin-bottom:14px}
+.calc-form-field label{display:block;font-size:12px;color:var(–ink-soft);text-transform:uppercase;letter-spacing:.06em;font-weight:600;margin-bottom:6px}
+.calc-form-field input,.calc-form-field textarea{width:100%;padding:11px 13px;border:1px solid var(–line);border-radius:11px;font-family:inherit;font-size:14px;outline:none;background:#fff}
+.calc-form-field textarea{resize:vertical;min-height:70px}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+/* SUMMARY */
+.summary-card{
+background:linear-gradient(160deg,#ffd09a,var(–orange) 70%,#d96a1f);
+color:#fff;border-radius:24px;padding:30px;box-shadow:var(–shadow);
+position:sticky;top:20px;overflow:hidden;
+}
+.summary-card::before{content:””;position:absolute;inset:auto -20% -40% auto;width:70%;height:120%;background:radial-gradient(circle,rgba(255,255,255,.35),transparent 60%);pointer-events:none}
+.summary-card h3{color:#fff;font-size:20px;margin-bottom:18px;position:relative}
+.summary-line{display:flex;justify-content:space-between;padding:9px 0;font-size:14px;position:relative;border-bottom:1px solid rgba(255,255,255,.18)}
+.summary-line:last-of-type{border:none}
+.summary-total{display:flex;justify-content:space-between;align-items:baseline;margin-top:18px;padding-top:18px;border-top:2px solid rgba(255,255,255,.4);position:relative}
+.summary-total span{font-size:13px;text-transform:uppercase;letter-spacing:.08em;font-weight:600;opacity:.95}
+.summary-total b{font-family:‘Fraunces’,serif;font-size:36px;font-weight:700}
+.btn-pdf{background:#fff;color:var(–green-900);width:100%;padding:14px;border-radius:14px;font-weight:700;font-size:15px;margin-top:18px;position:relative;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-pdf:hover{transform:translateY(-2px);box-shadow:0 8px 16px rgba(0,0,0,.2)}
+.btn-send{background:var(–green-900);color:#fff;width:100%;padding:13px;border-radius:14px;font-weight:600;font-size:14px;margin-top:8px;position:relative;transition:all .2s}
+.btn-send:hover{background:#000}
+
+/* TOAST */
+.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(120%);background:var(–green-900);color:#fff;padding:14px 22px;border-radius:14px;font-size:14px;box-shadow:var(–shadow);transition:transform .35s cubic-bezier(.2,.8,.2,1);z-index:1000;font-weight:500}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+.hero{grid-template-columns:1fr}
+.hero-card{padding:32px}
+.hero-card h1{font-size:38px}
+.search-bar{grid-template-columns:1fr}
+.pros-grid{grid-template-columns:1fr}
+.profile-grid,.calc-grid{grid-template-columns:1fr}
+.nav-links{display:none}
+.row-mat,.row-lab{grid-template-columns:1fr 1fr}
+.row-mat input:nth-child(1),.row-lab input:nth-child(1){grid-column:1/-1}
+.row .total-cell,.btn-remove{grid-column:1/-1}
+}
+</style>
+
+</head>
+<body>
+
+<nav class="nav">
+  <div class="logo"><div class="logo-mark">O</div>OrçaPro</div>
+  <div class="nav-links">
+    <button data-page="home" class="active">Início</button>
+    <button data-page="search">Buscar Profissionais</button>
+    <button data-page="calc">Área do Profissional</button>
+  </div>
+  <button class="btn-cta" data-page="calc">Sou Profissional</button>
+</nav>
+
+<main>
+
+<!-- HOME -->
+
+<section class="page active" id="page-home">
+  <div class="hero">
+    <div class="hero-card">
+      <h1>Orçamentos <em>elegantes</em>, em minutos.</h1>
+      <p>Conecte-se com profissionais autônomos da sua região, receba orçamentos detalhados em PDF e contrate com confiança. Tudo em um só lugar.</p>
+      <div class="hero-actions">
+        <button class="btn-pill btn-primary" data-page="search">Buscar profissional</button>
+        <button class="btn-pill btn-cream" data-page="calc">Sou autônomo</button>
+      </div>
+    </div>
+    <div class="hero-side">
+      <div class="card-orange">
+        <h3>Orçamento em PDF</h3>
+        <p>Calculadora versátil que gera orçamentos profissionais e detalhados, prontos para enviar.</p>
+      </div>
+      <div class="card-green">
+        <h3>Profissionais<br>verificados</h3>
+        <span class="pill-tag">+1.200 ativos</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="search-bar">
+    <div class="search-field">
+      <label>Serviço</label>
+      <input type="text" placeholder="Ex.: instalação elétrica" id="home-svc"/>
+    </div>
+    <div class="search-field">
+      <label>Cidade</label>
+      <input type="text" placeholder="Ex.: São Paulo" id="home-city"/>
+    </div>
+    <div class="search-field">
+      <label>Bairro</label>
+      <input type="text" placeholder="Opcional" id="home-area"/>
+    </div>
+    <button class="search-btn" data-page="search">Buscar →</button>
+  </div>
+
+  <div class="section-head">
+    <div>
+      <h2>Profissionais em destaque</h2>
+      <p>Selecionados pela qualidade e avaliação dos clientes</p>
+    </div>
+  </div>
+  <div class="pros-grid" id="featured-pros"></div>
+</section>
+
+<!-- SEARCH RESULTS -->
+
+<section class="page" id="page-search">
+  <div class="search-bar">
+    <div class="search-field">
+      <label>Serviço</label>
+      <input type="text" placeholder="Ex.: encanador" id="s-svc"/>
+    </div>
+    <div class="search-field">
+      <label>Cidade</label>
+      <input type="text" placeholder="Ex.: São Paulo" id="s-city"/>
+    </div>
+    <div class="search-field">
+      <label>Categoria</label>
+      <select id="s-cat">
+        <option value="">Todas</option>
+        <option>Elétrica</option>
+        <option>Hidráulica</option>
+        <option>Marcenaria</option>
+        <option>Pintura</option>
+        <option>Instalação</option>
+        <option>Reformas</option>
+      </select>
+    </div>
+    <button class="search-btn" id="s-go">Filtrar</button>
+  </div>
+
+  <div class="section-head">
+    <div>
+      <h2 id="s-title">Profissionais disponíveis</h2>
+      <p id="s-count"></p>
+    </div>
+  </div>
+  <div class="pros-grid" id="search-pros"></div>
+</section>
+
+<!-- PROFILE -->
+
+<section class="page" id="page-profile">
+  <div class="profile-grid">
+    <div class="profile-main">
+      <div class="profile-hero">
+        <div class="avatar avatar-lg" id="p-avatar">M</div>
+        <div>
+          <h1 id="p-name">—</h1>
+          <div class="pro-trade" id="p-trade">—</div>
+          <div class="pro-tags" id="p-tags" style="margin-top:10px"></div>
+        </div>
+      </div>
+
+```
+  <div class="profile-stats">
+    <div class="stat"><b id="p-rating">—</b><span>Avaliação</span></div>
+    <div class="stat"><b id="p-jobs">—</b><span>Serviços feitos</span></div>
+    <div class="stat"><b id="p-years">—</b><span>Anos de exp.</span></div>
+  </div>
+
+  <div class="profile-section">
+    <h3>Sobre</h3>
+    <p style="color:var(--ink-soft)" id="p-about"></p>
+  </div>
+
+  <div class="profile-section">
+    <h3>Serviços oferecidos</h3>
+    <div class="services-list" id="p-services"></div>
+  </div>
+</div>
+
+<div class="request-card">
+  <h3>Solicitar orçamento</h3>
+  <p>Descreva o serviço e o profissional retornará com um orçamento detalhado em PDF.</p>
+  <div class="form-field">
+    <label>Seu nome</label>
+    <input type="text" id="r-name" placeholder="Nome completo"/>
+  </div>
+  <div class="form-field">
+    <label>Telefone / e-mail</label>
+    <input type="text" id="r-contact" placeholder="(11) 99999-0000"/>
+  </div>
+  <div class="form-field">
+    <label>Endereço do serviço</label>
+    <input type="text" id="r-addr" placeholder="Rua, número, bairro"/>
+  </div>
+  <div class="form-field">
+    <label>Descrição do serviço</label>
+    <textarea id="r-desc" placeholder="Descreva o que precisa, dimensões, prazo desejado…"></textarea>
+  </div>
+  <button class="btn-orange" id="r-send">Enviar solicitação</button>
+</div>
+```
+
+  </div>
+</section>
+
+<!-- CALCULATOR -->
+
+<section class="page" id="page-calc">
+  <div class="calc-grid">
+    <div class="calc-main">
+      <h2>Calculadora de orçamento</h2>
+      <p>Monte um orçamento detalhado em segundos e gere um PDF profissional pronto para enviar ao cliente.</p>
+
+```
+  <div class="calc-section">
+    <h4 style="font-family:'Fraunces',serif;font-size:17px;margin-bottom:12px">Dados do orçamento</h4>
+    <div class="two-col">
+      <div class="calc-form-field">
+        <label>Profissional / Empresa</label>
+        <input type="text" id="b-from" value="Marcos Silva — Eletricista"/>
+      </div>
+      <div class="calc-form-field">
+        <label>CNPJ / CPF</label>
+        <input type="text" id="b-doc" placeholder="000.000.000-00"/>
+      </div>
+    </div>
+    <div class="two-col">
+      <div class="calc-form-field">
+        <label>Cliente</label>
+        <input type="text" id="b-client" placeholder="Nome do cliente"/>
+      </div>
+      <div class="calc-form-field">
+        <label>Serviço / Projeto</label>
+        <input type="text" id="b-project" placeholder="Ex.: Instalação de chuveiro"/>
+      </div>
+    </div>
+    <div class="calc-form-field">
+      <label>Descrição do serviço</label>
+      <textarea id="b-desc" placeholder="Descreva o escopo do serviço, o que está incluso e o que não está…"></textarea>
+    </div>
+  </div>
+
+  <div class="calc-section">
+    <div class="calc-section-head">
+      <h4>Materiais</h4>
+      <button class="btn-add" id="add-mat">+ Adicionar material</button>
+    </div>
+    <div class="row row-mat" style="margin-bottom:6px">
+      <span style="font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-soft);font-weight:600">Item</span>
+      <span style="font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-soft);font-weight:600">Qtd.</span>
+      <span style="font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-soft);font-weight:600">Unit. (R$)</span>
+      <span style="font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-soft);font-weight:600;text-align:right">Total</span>
+      <span></span>
+    </div>
+    <div id="materials"></div>
+  </div>
+
+  <div class="calc-section">
+    <div class="calc-section-head">
+      <h4>Mão de obra</h4>
+      <button class="btn-add" id="add-lab">+ Adicionar item</button>
+    </div>
+    <div class="row row-lab" style="margin-bottom:6px">
+      <span style="font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-soft);font-weight:600">Atividade</span>
+      <span style="font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-soft);font-weight:600">Horas</span>
+      <span style="font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-soft);font-weight:600">R$/h</span>
+      <span></span>
+    </div>
+    <div id="labor"></div>
+  </div>
+
+  <div class="calc-section">
+    <h4 style="font-family:'Fraunces',serif;font-size:17px;margin-bottom:12px">Ajustes</h4>
+    <div class="extras-row">
+      <div class="form-light">
+        <label>Deslocamento (R$)</label>
+        <input type="number" id="b-trip" value="0" min="0" step="0.01"/>
+      </div>
+      <div class="form-light">
+        <label>Desconto (%)</label>
+        <input type="number" id="b-disc" value="0" min="0" max="100" step="0.1"/>
+      </div>
+      <div class="form-light">
+        <label>Validade (dias)</label>
+        <input type="number" id="b-valid" value="15" min="1"/>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="summary-card">
+  <h3>Resumo do orçamento</h3>
+  <div class="summary-line"><span>Materiais</span><b id="t-mat">R$ 0,00</b></div>
+  <div class="summary-line"><span>Mão de obra</span><b id="t-lab">R$ 0,00</b></div>
+  <div class="summary-line"><span>Deslocamento</span><b id="t-trip">R$ 0,00</b></div>
+  <div class="summary-line"><span>Subtotal</span><b id="t-sub">R$ 0,00</b></div>
+  <div class="summary-line"><span>Desconto</span><b id="t-disc">- R$ 0,00</b></div>
+  <div class="summary-total">
+    <span>Total</span>
+    <b id="t-total">R$ 0,00</b>
+  </div>
+  <button class="btn-pdf" id="gen-pdf">⬇ Gerar PDF profissional</button>
+  <button class="btn-send" id="send-pdf">Enviar ao cliente</button>
+</div>
+```
+
+  </div>
+</section>
+
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ---------------- DATA ---------------- */
+const PROS = [
+  {id:1,name:"Marcos Silva",trade:"Eletricista",cat:"Elétrica",city:"São Paulo",area:"Pinheiros",rating:4.9,jobs:142,years:12,price:"a partir de R$ 90/h",
+   tags:["Instalação","Manutenção","Quadros","Chuveiros"],initial:"M",color:"green",
+   about:"Eletricista certificado NR-10 com mais de uma década atendendo residências e pequenos comércios. Trabalho com nota e garantia de 90 dias.",
+   services:[
+     {n:"Instalação de tomada simples",p:"R$ 80"},
+     {n:"Troca de chuveiro elétrico",p:"R$ 120"},
+     {n:"Quadro de distribuição completo",p:"R$ 950"},
+     {n:"Diagnóstico de curto-circuito",p:"R$ 150"},
+   ]},
+  {id:2,name:"Júlia Bertoni",trade:"Encanadora",cat:"Hidráulica",city:"São Paulo",area:"Vila Madalena",rating:4.8,jobs:98,years:7,price:"a partir de R$ 100/h",
+   tags:["Vazamentos","Instalação","Reparos"],initial:"J",color:"orange",
+   about:"Especialista em hidráulica residencial. Detecção de vazamentos sem quebra-quebra e reparos com garantia.",
+   services:[
+     {n:"Detecção de vazamento",p:"R$ 180"},
+     {n:"Troca de registro",p:"R$ 110"},
+     {n:"Instalação de torneira",p:"R$ 90"},
+     {n:"Desentupimento de pia",p:"R$ 130"},
+   ]},
+  {id:3,name:"Rafael Tognini",trade:"Marceneiro",cat:"Marcenaria",city:"Campinas",area:"Cambuí",rating:5.0,jobs:64,years:15,price:"sob orçamento",
+   tags:["Móveis sob medida","Reparos","Prateleiras"],initial:"R",color:"cream",
+   about:"Marcenaria artesanal com foco em móveis sob medida. MDF, multilaminado e madeira maciça.",
+   services:[
+     {n:"Prateleira sob medida (m²)",p:"R$ 280"},
+     {n:"Restauração de móvel",p:"R$ 350"},
+     {n:"Armário planejado (m²)",p:"R$ 1.200"},
+   ]},
+  {id:4,name:"Ana Paula Cruz",trade:"Pintora",cat:"Pintura",city:"São Paulo",area:"Tatuapé",rating:4.7,jobs:81,years:9,price:"a partir de R$ 28/m²",
+   tags:["Residencial","Texturas","Esmalte"],initial:"A",color:"green",
+   about:"Pintura residencial e comercial. Acabamento limpo e prazos respeitados.",
+   services:[
+     {n:"Pintura de parede (m²)",p:"R$ 28"},
+     {n:"Aplicação de massa corrida (m²)",p:"R$ 22"},
+     {n:"Pintura de portão/grade",p:"R$ 240"},
+   ]},
+  {id:5,name:"Diego Almeida",trade:"Instalador AC",cat:"Instalação",city:"Guarulhos",area:"Centro",rating:4.9,jobs:215,years:10,price:"R$ 250 instalação",
+   tags:["Split","Manutenção","Higienização"],initial:"D",color:"orange",
+   about:"Instalação e manutenção de ar-condicionado split. Atendo a região metropolitana.",
+   services:[
+     {n:"Instalação split 9-12k BTUs",p:"R$ 250"},
+     {n:"Higienização completa",p:"R$ 180"},
+     {n:"Recarga de gás",p:"R$ 220"},
+   ]},
+  {id:6,name:"Sofia Mendes",trade:"Reformista",cat:"Reformas",city:"São Paulo",area:"Moema",rating:4.8,jobs:47,years:11,price:"sob orçamento",
+   tags:["Banheiros","Cozinhas","Pisos"],initial:"S",color:"cream",
+   about:"Reformas de banheiros e cozinhas. Equipe própria para hidráulica, elétrica e revestimentos.",
+   services:[
+     {n:"Reforma de banheiro completo",p:"R$ 8.500"},
+     {n:"Assentamento de piso (m²)",p:"R$ 65"},
+     {n:"Reforma de cozinha",p:"sob orçamento"},
+   ]},
+];
+
+/* ---------------- NAV ---------------- */
+let currentProId=null;
+function go(page){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+page).classList.add('active');
+  document.querySelectorAll('.nav-links button').forEach(b=>b.classList.toggle('active',b.dataset.page===page));
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+document.querySelectorAll('[data-page]').forEach(el=>{
+  el.addEventListener('click',()=>{
+    const p=el.dataset.page;
+    if(p==='search'){
+      const svc=document.getElementById('home-svc')?.value;
+      const city=document.getElementById('home-city')?.value;
+      if(svc) document.getElementById('s-svc').value=svc;
+      if(city) document.getElementById('s-city').value=city;
+      runSearch();
+    }
+    go(p);
+  });
+});
+
+/* ---------------- RENDER PROS ---------------- */
+function proCard(p){
+  return `<div class="pro-card" data-id="${p.id}">
+    <div class="pro-head">
+      <div class="avatar ${p.color}">${p.initial}</div>
+      <div>
+        <div class="pro-name">${p.name}</div>
+        <div class="pro-trade">${p.trade} · ${p.area}, ${p.city}</div>
+      </div>
+    </div>
+    <div class="pro-tags">${p.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+    <div class="pro-meta">
+      <div class="rating"><span>★</span> ${p.rating} <span style="color:var(--ink-soft);font-weight:400">(${p.jobs})</span></div>
+      <div class="pro-price"><b>${p.price}</b></div>
+    </div>
+  </div>`;
+}
+function bindCards(container){
+  container.querySelectorAll('.pro-card').forEach(c=>{
+    c.addEventListener('click',()=>openProfile(parseInt(c.dataset.id)));
+  });
+}
+document.getElementById('featured-pros').innerHTML=PROS.slice(0,6).map(proCard).join('');
+bindCards(document.getElementById('featured-pros'));
+
+/* ---------------- SEARCH ---------------- */
+function runSearch(){
+  const svc=(document.getElementById('s-svc').value||'').toLowerCase();
+  const city=(document.getElementById('s-city').value||'').toLowerCase();
+  const cat=document.getElementById('s-cat').value;
+  const filtered=PROS.filter(p=>{
+    return (!svc || p.trade.toLowerCase().includes(svc) || p.tags.join(' ').toLowerCase().includes(svc) || p.cat.toLowerCase().includes(svc))
+      && (!city || p.city.toLowerCase().includes(city) || p.area.toLowerCase().includes(city))
+      && (!cat || p.cat===cat);
+  });
+  const c=document.getElementById('search-pros');
+  c.innerHTML = filtered.length ? filtered.map(proCard).join('') : `<div style="grid-column:1/-1;text-align:center;color:var(--ink-soft);padding:40px">Nenhum profissional encontrado. Tente outros filtros.</div>`;
+  document.getElementById('s-count').textContent = `${filtered.length} resultado${filtered.length!==1?'s':''}`;
+  bindCards(c);
+}
+document.getElementById('s-go').addEventListener('click',runSearch);
+runSearch();
+
+/* ---------------- PROFILE ---------------- */
+function openProfile(id){
+  const p=PROS.find(x=>x.id===id);
+  if(!p) return;
+  currentProId=id;
+  document.getElementById('p-avatar').textContent=p.initial;
+  document.getElementById('p-avatar').className='avatar avatar-lg '+p.color;
+  document.getElementById('p-name').textContent=p.name;
+  document.getElementById('p-trade').textContent=`${p.trade} · ${p.area}, ${p.city}`;
+  document.getElementById('p-tags').innerHTML=p.tags.map(t=>`<span class="tag">${t}</span>`).join('');
+  document.getElementById('p-rating').textContent=p.rating;
+  document.getElementById('p-jobs').textContent=p.jobs;
+  document.getElementById('p-years').textContent=p.years;
+  document.getElementById('p-about').textContent=p.about;
+  document.getElementById('p-services').innerHTML=p.services.map(s=>`<div class="service-item"><span>${s.n}</span><b>${s.p}</b></div>`).join('');
+  go('profile');
+}
+document.getElementById('r-send').addEventListener('click',()=>{
+  const name=document.getElementById('r-name').value.trim();
+  const desc=document.getElementById('r-desc').value.trim();
+  if(!name||!desc){toast('Preencha nome e descrição.');return}
+  toast('✓ Solicitação enviada ao profissional!');
+  ['r-name','r-contact','r-addr','r-desc'].forEach(id=>document.getElementById(id).value='');
+});
+
+/* ---------------- CALCULATOR ---------------- */
+const matsEl=document.getElementById('materials');
+const labEl=document.getElementById('labor');
+const fmt=v=>'R$ '+v.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+
+function matRow(name='',qty=1,unit=0){
+  const div=document.createElement('div');
+  div.className='row row-mat';
+  div.innerHTML=`
+    <input class="m-name" type="text" placeholder="Ex.: Cabo flexível 2,5mm (m)" value="${name}"/>
+    <input class="m-qty" type="number" min="0" step="0.01" value="${qty}"/>
+    <input class="m-unit" type="number" min="0" step="0.01" value="${unit}"/>
+    <div class="total-cell m-tot">R$ 0,00</div>
+    <button class="btn-remove" title="Remover">×</button>
+  `;
+  div.querySelectorAll('input').forEach(i=>i.addEventListener('input',recalc));
+  div.querySelector('.btn-remove').addEventListener('click',()=>{div.remove();recalc()});
+  matsEl.appendChild(div);
+  recalc();
+}
+function labRow(name='',hrs=1,rate=0){
+  const div=document.createElement('div');
+  div.className='row row-lab';
+  div.innerHTML=`
+    <input class="l-name" type="text" placeholder="Ex.: Instalação e teste" value="${name}"/>
+    <input class="l-hrs" type="number" min="0" step="0.25" value="${hrs}"/>
+    <input class="l-rate" type="number" min="0" step="0.01" value="${rate}"/>
+    <button class="btn-remove" title="Remover">×</button>
+  `;
+  div.querySelectorAll('input').forEach(i=>i.addEventListener('input',recalc));
+  div.querySelector('.btn-remove').addEventListener('click',()=>{div.remove();recalc()});
+  labEl.appendChild(div);
+  recalc();
+}
+document.getElementById('add-mat').addEventListener('click',()=>matRow());
+document.getElementById('add-lab').addEventListener('click',()=>labRow());
+
+function recalc(){
+  let mat=0;
+  matsEl.querySelectorAll('.row').forEach(r=>{
+    const q=parseFloat(r.querySelector('.m-qty').value)||0;
+    const u=parseFloat(r.querySelector('.m-unit').value)||0;
+    const t=q*u; mat+=t;
+    r.querySelector('.m-tot').textContent=fmt(t);
+  });
+  let lab=0;
+  labEl.querySelectorAll('.row').forEach(r=>{
+    const h=parseFloat(r.querySelector('.l-hrs').value)||0;
+    const rt=parseFloat(r.querySelector('.l-rate').value)||0;
+    lab+=h*rt;
+  });
+  const trip=parseFloat(document.getElementById('b-trip').value)||0;
+  const disc=parseFloat(document.getElementById('b-disc').value)||0;
+  const sub=mat+lab+trip;
+  const dval=sub*(disc/100);
+  const total=sub-dval;
+  document.getElementById('t-mat').textContent=fmt(mat);
+  document.getElementById('t-lab').textContent=fmt(lab);
+  document.getElementById('t-trip').textContent=fmt(trip);
+  document.getElementById('t-sub').textContent=fmt(sub);
+  document.getElementById('t-disc').textContent='- '+fmt(dval);
+  document.getElementById('t-total').textContent=fmt(total);
+}
+['b-trip','b-disc'].forEach(id=>document.getElementById(id).addEventListener('input',recalc));
+
+// Sample rows
+matRow('Cabo flexível 2,5mm (m)',20,3.50);
+matRow('Disjuntor monopolar 20A',2,18.90);
+labRow('Instalação e testes',3,90);
+
+/* ---------------- PDF ---------------- */
+document.getElementById('gen-pdf').addEventListener('click',generatePDF);
+document.getElementById('send-pdf').addEventListener('click',()=>{
+  generatePDF();
+  setTimeout(()=>toast('✓ PDF gerado e enviado ao cliente!'),300);
+});
+
+function generatePDF(){
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({unit:'pt',format:'a4'});
+  const W = doc.internal.pageSize.getWidth();
+  const H = doc.internal.pageSize.getHeight();
+
+  // Colors
+  const GREEN = [14,59,46];
+  const GREEN_MID = [31,122,90];
+  const ORANGE = [240,138,62];
+  const CREAM = [251,243,226];
+  const INK = [26,29,27];
+  const SOFT = [110,115,112];
+  const LINE = [231,223,204];
+
+  // Header band
+  doc.setFillColor(...GREEN); doc.rect(0,0,W,110,'F');
+  doc.setFillColor(...GREEN_MID); doc.circle(W-50,55,80,'F');
+  doc.setFillColor(...ORANGE); doc.circle(W-130,30,30,'F');
+
+  doc.setTextColor(255,255,255);
+  doc.setFont('helvetica','bold'); doc.setFontSize(11);
+  doc.text('ORÇAPRO',40,40);
+  doc.setFont('helvetica','normal'); doc.setFontSize(9);
+  doc.text('Orçamentos profissionais para autônomos',40,55);
+
+  doc.setFont('helvetica','bold'); doc.setFontSize(26);
+  doc.text('Orçamento',40,92);
+
+  // Meta box
+  const today = new Date();
+  const validity = parseInt(document.getElementById('b-valid').value)||15;
+  const dueDate = new Date(today.getTime()+validity*86400000);
+  const docNum = 'OP-' + today.getFullYear() + String(today.getMonth()+1).padStart(2,'0') + String(today.getDate()).padStart(2,'0') + '-' + String(Math.floor(Math.random()*900)+100);
+
+  doc.setFillColor(...CREAM);
+  doc.roundedRect(40,130,W-80,70,10,10,'F');
+  doc.setTextColor(...SOFT); doc.setFontSize(8); doc.setFont('helvetica','bold');
+  doc.text('Nº DO ORÇAMENTO',55,150);
+  doc.text('DATA',230,150);
+  doc.text('VÁLIDO ATÉ',360,150);
+  doc.text('PROJETO',490,150);
+  doc.setTextColor(...INK); doc.setFontSize(11);
+  doc.text(docNum,55,168);
+  doc.text(today.toLocaleDateString('pt-BR'),230,168);
+  doc.text(dueDate.toLocaleDateString('pt-BR'),360,168);
+  const project = document.getElementById('b-project').value || '—';
+  doc.text(project.substring(0,18),490,168);
+
+  // From / To
+  let y = 230;
+  doc.setFontSize(8); doc.setTextColor(...SOFT); doc.setFont('helvetica','bold');
+  doc.text('DE',40,y); doc.text('PARA',310,y);
+  doc.setFontSize(11); doc.setTextColor(...INK); doc.setFont('helvetica','bold');
+  doc.text(document.getElementById('b-from').value||'—',40,y+18);
+  doc.text(document.getElementById('b-client').value||'Cliente',310,y+18);
+  doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(...SOFT);
+  doc.text('Doc.: '+(document.getElementById('b-doc').value||'—'),40,y+34);
+
+  // Description
+  y = 290;
+  const desc = document.getElementById('b-desc').value;
+  if(desc){
+    doc.setFont('helvetica','bold'); doc.setFontSize(10); doc.setTextColor(...GREEN);
+    doc.text('DESCRIÇÃO DO SERVIÇO',40,y);
+    doc.setDrawColor(...LINE); doc.setLineWidth(0.5);
+    doc.line(40,y+5,W-40,y+5);
+    doc.setFont('helvetica','normal'); doc.setFontSize(10); doc.setTextColor(...INK);
+    const lines = doc.splitTextToSize(desc, W-80);
+    doc.text(lines,40,y+22);
+    y = y+22+lines.length*13+10;
+  }
+
+  // Helper for tables
+  function tableHead(title,y){
+    doc.setFillColor(...GREEN);
+    doc.roundedRect(40,y,W-80,26,6,6,'F');
+    doc.setTextColor(255,255,255); doc.setFont('helvetica','bold'); doc.setFontSize(10);
+    doc.text(title,52,y+17);
+    return y+26;
+  }
+  function rowLine(y,cells,bold){
+    doc.setTextColor(...INK); doc.setFont('helvetica',bold?'bold':'normal'); doc.setFontSize(10);
+    doc.text(cells[0],52,y+15);
+    doc.text(cells[1],340,y+15,{align:'right'});
+    doc.text(cells[2],420,y+15,{align:'right'});
+    doc.text(cells[3],W-52,y+15,{align:'right'});
+    doc.setDrawColor(...LINE); doc.setLineWidth(0.3);
+    doc.line(40,y+24,W-40,y+24);
+    return y+24;
+  }
+
+  // Materials
+  let totalMat=0;
+  const mats=[];
+  matsEl.querySelectorAll('.row').forEach(r=>{
+    const n=r.querySelector('.m-name').value||'Material';
+    const q=parseFloat(r.querySelector('.m-qty').value)||0;
+    const u=parseFloat(r.querySelector('.m-unit').value)||0;
+    if(q>0){mats.push({n,q,u,t:q*u}); totalMat+=q*u}
+  });
+  if(mats.length){
+    if(y>650){doc.addPage();y=60}
+    y = tableHead('MATERIAIS',y);
+    doc.setFillColor(...CREAM); doc.rect(40,y,W-80,18,'F');
+    doc.setTextColor(...SOFT); doc.setFontSize(8); doc.setFont('helvetica','bold');
+    doc.text('ITEM',52,y+12);
+    doc.text('QTD',340,y+12,{align:'right'});
+    doc.text('UNIT.',420,y+12,{align:'right'});
+    doc.text('TOTAL',W-52,y+12,{align:'right'});
+    y+=18;
+    mats.forEach(m=>{
+      if(y>740){doc.addPage();y=60}
+      y = rowLine(y,[m.n.substring(0,40),m.q.toString(),fmt(m.u),fmt(m.t)]);
+    });
+  }
+
+  // Labor
+  let totalLab=0;
+  const labs=[];
+  labEl.querySelectorAll('.row').forEach(r=>{
+    const n=r.querySelector('.l-name').value||'Mão de obra';
+    const h=parseFloat(r.querySelector('.l-hrs').value)||0;
+    const rt=parseFloat(r.querySelector('.l-rate').value)||0;
+    if(h>0){labs.push({n,h,rt,t:h*rt}); totalLab+=h*rt}
+  });
+  if(labs.length){
+    y+=10;
+    if(y>700){doc.addPage();y=60}
+    y = tableHead('MÃO DE OBRA',y);
+    doc.setFillColor(...CREAM); doc.rect(40,y,W-80,18,'F');
+    doc.setTextColor(...SOFT); doc.setFontSize(8); doc.setFont('helvetica','bold');
+    doc.text('ATIVIDADE',52,y+12);
+    doc.text('HORAS',340,y+12,{align:'right'});
+    doc.text('R$/H',420,y+12,{align:'right'});
+    doc.text('TOTAL',W-52,y+12,{align:'right'});
+    y+=18;
+    labs.forEach(l=>{
+      if(y>740){doc.addPage();y=60}
+      y = rowLine(y,[l.n.substring(0,40),l.h.toString()+'h',fmt(l.rt),fmt(l.t)]);
+    });
+  }
+
+  // Totals
+  const trip=parseFloat(document.getElementById('b-trip').value)||0;
+  const disc=parseFloat(document.getElementById('b-disc').value)||0;
+  const sub=totalMat+totalLab+trip;
+  const dval=sub*(disc/100);
+  const total=sub-dval;
+
+  if(y>620){doc.addPage();y=60}
+  y+=20;
+  doc.setTextColor(...SOFT); doc.setFontSize(10); doc.setFont('helvetica','normal');
+  doc.text('Materiais',W-180,y); doc.text(fmt(totalMat),W-52,y,{align:'right'}); y+=16;
+  doc.text('Mão de obra',W-180,y); doc.text(fmt(totalLab),W-52,y,{align:'right'}); y+=16;
+  if(trip>0){doc.text('Deslocamento',W-180,y); doc.text(fmt(trip),W-52,y,{align:'right'}); y+=16}
+  doc.setFont('helvetica','bold'); doc.setTextColor(...INK);
+  doc.text('Subtotal',W-180,y); doc.text(fmt(sub),W-52,y,{align:'right'}); y+=16;
+  if(dval>0){
+    doc.setFont('helvetica','normal'); doc.setTextColor(...ORANGE);
+    doc.text(`Desconto (${disc}%)`,W-180,y); doc.text('- '+fmt(dval),W-52,y,{align:'right'}); y+=16;
+  }
+  // Total bar
+  y+=8;
+  doc.setFillColor(...ORANGE);
+  doc.roundedRect(W-260,y,220,46,8,8,'F');
+  doc.setTextColor(255,255,255); doc.setFont('helvetica','bold'); doc.setFontSize(10);
+  doc.text('TOTAL',W-248,y+19);
+  doc.setFontSize(20);
+  doc.text(fmt(total),W-52,y+30,{align:'right'});
+  y+=60;
+
+  // Footer
+  doc.setDrawColor(...LINE); doc.line(40,H-70,W-40,H-70);
+  doc.setTextColor(...SOFT); doc.setFontSize(8); doc.setFont('helvetica','normal');
+  doc.text(`Orçamento válido por ${validity} dias. Sujeito a alterações conforme escopo final do serviço.`,40,H-50);
+  doc.text('Gerado por OrçaPro · orcapro.app',40,H-35);
+  doc.text(docNum,W-40,H-35,{align:'right'});
+
+  doc.save(`Orcamento-${docNum}.pdf`);
+  toast('✓ PDF gerado com sucesso!');
+}
+
+/* ---------------- TOAST ---------------- */
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.classList.add('show');
+  clearTimeout(window._tt);
+  window._tt=setTimeout(()=>t.classList.remove('show'),2600);
+}
+</script>
+
+</body>
+</html>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Renegade Studio — Configurador</title>
